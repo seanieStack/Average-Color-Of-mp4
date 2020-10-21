@@ -31,8 +31,8 @@ def getAverageColor(image_path):
     width, height = 0, 0
     width, height = image.size
 
-    r, g, b = 1, 1, 1
-    count = 1
+    r, g, b = 0, 0, 0
+    count = 0
 
     for s in range(1, width):
         for t in range(1, height):
