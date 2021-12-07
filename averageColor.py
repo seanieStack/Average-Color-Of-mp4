@@ -1,12 +1,11 @@
-import cv2
-import numpy as np
-import os
-import sys
-import shutil
-from PIL import Image
-import easygui
-from numpy.lib.function_base import average
-from tqdm import tqdm
+import cv2                      # reading and writing video
+import numpy as np              # calculaing colors of input images in arrays
+import os                       # making directories and os details
+from sys import exit            # exiting file instead of throwing exeptions
+from shutil import rmtree       # deleting file directories with all files
+from PIL import Image           # create new images
+from easygui import fileopenbox # get input video file
+from tqdm import tqdm           # progress bars
 
 # function to add the average color to array
 def colorOfCurrentFrame(frame: str) -> None:
@@ -14,37 +13,34 @@ def colorOfCurrentFrame(frame: str) -> None:
         # creates a img object
         img = cv2.imread(frame, cv2.IMREAD_COLOR)
 
-        # gets the average of the 3d array
-        bgr = np.average(np.average(img, axis=0), axis=0)
-
-        # adds new color to end of color array
-        averageColor.append(bgr)
+        # gets the average of the 3d array and appends to end of array
+        averageColor.append(np.average(np.average(img, axis=0), axis=0))        
     except:
-        sys.exit("Error Reading Frame")
+        exit("Error Reading Frame")
 
-def main():
+def main() -> None:
     # checks if ./temp exisits, if yes, it deletes it 
     # and all its content, then creates it, if no it creates it
     try:
         if os.path.exists('./temp'):
-            shutil.rmtree("./temp")
+            rmtree("./temp")
         os.makedirs('./temp')
     except OSError:
-        sys.exit("Error: Creating Derictory of data")
+        exit("Error: Creating Derictory of data")
 
-    #Gets input video from file browser
-    inputVideo = easygui.fileopenbox(filetypes=["*.mp4"])
+    # Gets input video from file browser
+    inputVideo = fileopenbox(filetypes=["*.mp4"])
 
-    #close if user inputs nothing
+    # close if user inputs nothing
     if inputVideo == None:
-        sys.exit("Please Select A video File")
+        exit("Please Select A video File")
 
     # sets up our capture object
     cap = cv2.VideoCapture(inputVideo)
 
-    #if capture device fails, close program
+    # if capture device fails, close program
     if not cap.isOpened():
-        sys.exit("Error Creating Capture Device")
+        exit("Error Creating Capture Device")
 
     # gets the number of frames for the input video
     length_of_input_video = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -76,10 +72,10 @@ def main():
     averageColor = []
 
     # checks if ./tmp exisits, if yes, it deletes it and all
-    #  its content, then creates it, if no it creates it
+    # its content, then creates it, if no it creates it
     try:
         if os.path.exists('./tmp'):
-            shutil.rmtree("./tmp")
+            rmtree("./tmp")
         os.makedirs('./tmp')
     except OSError:
         print("Error: Creating Derictory of data")
@@ -102,10 +98,9 @@ def main():
     # loops through all images in tmp dir
     for i in tqdm(range(0, len(next(os.walk("./tmp"))[2])),\
         desc="Saving Collect File Locations"):
-        
+
         # addes image location to end of image array
         images.append(f"./tmp/finished{i}.jpg")
-
 
     # setup for video writer
     frame = cv2.imread(images[0])
@@ -122,8 +117,8 @@ def main():
     video.release()
 
     # deletes all tmp dirs
-    shutil.rmtree("./temp")
-    shutil.rmtree("./tmp")
+    rmtree("./temp")
+    rmtree("./tmp")
 
 if __name__ == "__main__":
     main()
