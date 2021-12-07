@@ -1,5 +1,4 @@
 #Average Color of A Video
-#### Video Demo:  https://youtu.be/QGFHVWJsg6I
 #### Description:
 Asks the user for a video.
 
