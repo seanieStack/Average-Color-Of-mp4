@@ -10,7 +10,7 @@ then recompiles all those images back into an output video file.
 
 ##### Requirements:
 * Open CV2
-`pip3 install opencv-python`
+`pip install opencv-python`
 
 * Numpy
 `pip install numpy`
